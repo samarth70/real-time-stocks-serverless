@@ -1,0 +1,14 @@
+{
+  "name": "real-time-stocks-api",
+  "version": "1.0.0",
+  "description": "Cloudflare worker for stocks pipeline",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute DB --local --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^3.45.0"
+  }
+}

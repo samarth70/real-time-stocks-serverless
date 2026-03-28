@@ -1,0 +1,81 @@
+\documentclass[12pt,a4paper]{article}
+
+% Required Packages
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Setup Hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Real-Time Stocks Dashboard: Technical Architecture Report},
+}
+
+% Title formats
+\titleformat{\section}{\Large\bfseries\color{darkgray}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{gray}}{\thesubsection}{1em}{}
+
+% Custom Colors
+\definecolor{darkgray}{RGB}{50,50,50}
+\definecolor{gray}{RGB}{100,100,100}
+
+\begin{document}
+
+\title{\textbf{Real-Time Stocks: Pipeline Evolution (V1 to V2)} \\ \Large Technical Architecture \& Implementation Report}
+\author{Samarth Agarwal \\ \href{mailto:samarthagrawal526@gmail.com}{samarthagrawal526@gmail.com}}
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+This report outlines the technical evolution of a real-time financial market data system. Originally conceived as an enterprise-grade Modern Data Stack (Version 1) utilizing Kafka, Snowflake, and Airflow, the project has transitioned into an ultra-low-latency, infinitely scalable Global Serverless Edge application (Version 2) utilizing the Cloudflare ecosystem and React. This document details the architectural shift, the strategic on-demand caching model of Version 2, and the resulting performance improvements.
+\end{abstract}
+
+\vspace{1cm}
+\tableofcontents
+\newpage
+
+\section{Evolution Overview}
+The project transitioned through two distinct architectural phases:
+\begin{itemize}
+    \item \textbf{Version 1 (Legacy):} A heavyweight Modern Data Stack (MDS) utilizing containerized orchestration (Docker), stream processing (Kafka), and cloud warehousing (Snowflake).
+    \item \textbf{Version 2 (Current):} A serverless, edge-computed dashboard hosted on Cloudflare Pages/Workers, optimizing for cost, latency, and global availability. \textit{Live Demo: \url{https://d0fc8457.marketpulse-91t.pages.dev}}
+\end{itemize}
+
+\section{Version 1: The Heavy Modern Data Stack}
+Version 1 focused on absolute data persistence and enterprise-grade ETL pipelines. It utilized Apache Kafka to stream live symbols into a MinIO-based data lake, followed by Apache Airflow orchestrating dbt transformations inside Snowflake. While statistically robust, Version 1 required always-on compute resources and significant maintenance overhead.
+
+\section{Version 2: Serverless Edge Architecture}
+Version 2 represents the matured, cost-efficient state of the project. By shedding local orchestration, the application now runs entirely on the Cloudflare global network.
+
+\subsection{The Frontend (React + Vite)}
+The user-facing application was built using \textbf{React} and the \textbf{Vite} toolset.
+\begin{itemize}
+    \item \textbf{State Management:} Features real-time sync toggles and timeframe analysis (1H, 1D, 1W) with automatic data staleness detection.
+    \item \textbf{Deployment:} Deployed via \textbf{Cloudflare Pages} for instant global delivery.
+\end{itemize}
+
+\subsection{The Backend / API (Cloudflare Workers)}
+All backend logic is handled by a standalone \textbf{Cloudflare Worker} proxy. Operating on V8 Isolates, it provides zero-millisecond cold starts and proxies all API endpoints natively without the need for a dedicated server instance.
+
+\subsection{Database \& Storage}
+\begin{itemize}
+    \item \textbf{Cloudflare D1 (SQLite):} Serves as the primary edge-database, logging fetched transactions locally to provide sub-10ms cache hits.
+    \item \textbf{Cloudflare R2 (Object Storage):} Acts as the archival data lake for raw financial JSON payloads.
+\end{itemize}
+
+\section{Architectural Innovation: On-Demand Cache}
+To prevent API exhaustion, the Version 2 Worker implements a smart-caching proxy. Data is only fetched from the external provider if the local D1 cache is older than 60 seconds. This ensures that even under heavy concurrent load (e.g., 10,000+ users), the upstream provider is only queried once per minute per symbol, while users receive instantaneous responses from the edge database.
+
+\section{Conclusion}
+The migration from Version 1's monolithic enterprise stack to Version 2's serverless edge architecture highlights a shift toward hyper-efficiency. Version 2 achieves superior user responsiveness and feature density while maintaining a zero-maintenance, cost-optimized operational profile.
+
+\end{document}

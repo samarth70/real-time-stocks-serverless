@@ -1,0 +1,17 @@
+name = "real-time-stocks-api"
+main = "src/index.js"
+compatibility_date = "2024-03-29"
+
+[vars]
+FINNHUB_API_KEY = "dummy-api-key" # To be replaced with a secret
+
+
+
+[[d1_databases]]
+binding = "DB"
+database_name = "stocks-db"
+database_id = "797c1251-abb9-4e2c-a910-0a7f9ae8ec6a"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "bronze-transactions"
