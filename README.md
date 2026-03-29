@@ -10,6 +10,7 @@ This repository documents the evolution of a real-time financial tracking system
 The current version of the project leverages **Cloudflare's Edge Network** to provide a global, zero-latency financial dashboard. By moving logic to the edge, we eliminated the need for complex orchestration and reduced operational costs to nearly zero.
 
 ### Tech Stack (V2)
+![Version 2 Architecture Flow](assets/v2_architecture.png)
 - **Frontend:** React + Vite (Glassmorphism UI)
 - **Worker API:** Cloudflare Workers (V8 Isolates)
 - **Database:** Cloudflare D1 (Edge SQLite)
