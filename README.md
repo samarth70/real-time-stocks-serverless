@@ -9,6 +9,12 @@ This repository documents the evolution of a real-time financial tracking system
 
 The current version of the project leverages **Cloudflare's Edge Network** to provide a global, zero-latency financial dashboard. By moving logic to the edge, we eliminated the need for complex orchestration and reduced operational costs to nearly zero.
 
+### 🎬 Launch Demo & Architecture Walkthrough
+
+<p align="center">
+  <img src="assets/demo.gif" alt="MarketPulse Serverless Edge Demo" width="100%" />
+</p>
+
 ### Tech Stack (V2)
 ![Version 2 Architecture Flow](assets/v2_architecture.png)
 - **Frontend:** React + Vite (Glassmorphism UI)
